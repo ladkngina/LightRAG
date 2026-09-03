@@ -54,6 +54,8 @@ inputs/
 output/
 rag_storage/
 data/
+/datasets/
+/book_knowledge_graph.html
 
 # Runtime-provided entity type prompt profiles (keep sample files only)
 prompts/entity_type/

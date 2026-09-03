@@ -2,12 +2,25 @@ import os
 import json
 import glob
 import argparse
+from pathlib import Path
+
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+DEFAULT_INPUT_DIR = SCRIPT_DIR.parent / "datasets"
+DEFAULT_OUTPUT_DIR = DEFAULT_INPUT_DIR / "unique_contexts"
 
 
 def extract_unique_contexts(input_directory, output_directory):
+    input_directory = Path(input_directory).expanduser()
+    output_directory = Path(output_directory).expanduser()
+
+    if not input_directory.exists():
+        print(f"Input directory does not exist: {input_directory}")
+        return
+
     os.makedirs(output_directory, exist_ok=True)
 
-    jsonl_files = glob.glob(os.path.join(input_directory, "*.jsonl"))
+    jsonl_files = sorted(glob.glob(os.path.join(input_directory, "*.jsonl")))
     print(f"Found {len(jsonl_files)} JSONL files.")
 
     for file_path in jsonl_files:
@@ -59,9 +72,9 @@ def extract_unique_contexts(input_directory, output_directory):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--input_dir", type=str, default="../datasets")
+    parser.add_argument("-i", "--input_dir", type=str, default=str(DEFAULT_INPUT_DIR))
     parser.add_argument(
-        "-o", "--output_dir", type=str, default="../datasets/unique_contexts"
+        "-o", "--output_dir", type=str, default=str(DEFAULT_OUTPUT_DIR)
     )
 
     args = parser.parse_args()
